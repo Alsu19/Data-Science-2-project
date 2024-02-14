@@ -1,6 +1,6 @@
 ---
-title: Project title
-author: by Team name
+title: Machine learning using RNAseq data
+author: Alsu Shagieva
 output: github_document
 ---
 
@@ -29,9 +29,13 @@ Our presentation can be found [here](presentation/presentation.html).
 
 ## Data 
 
-Include a citation for your data here. 
-See http://libraryguides.vu.edu.au/c.php?g=386501&p=4347840 for guidance on proper citation for datasets. 
-If you got your data off the web, make sure to note the retrieval date.
+Data was found at ArrayExpress (https://www.ebi.ac.uk/biostudies/arrayexpress). 
+
+Submitter: Genomix4Life Giovanna Ventola
+Email: info@genomix4life.com 
+Role: submitter 
+Affiliation: Genomix4Life s.r.l.
+"Gene expression profiling of substantia nigra: a post-mortem study in Parkinson's disease and control subjects." BioStudies, E-MTAB-13295, 2024, https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-13295. Accessed 13 February 2024.
 
 ## References
 

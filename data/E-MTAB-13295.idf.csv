@@ -1,0 +1,37 @@
+Comment[ArrayExpressAccession]	E-MTAB-13295
+MAGE-TAB Version	1.1
+Comment[Submitted Name]	Gene expression profiling of substantia nigra: a post-mortem study in Parkinson's disease and control subjects
+Investigation Title	Gene expression profiling of substantia nigra: a post-mortem study in Parkinson's disease and control subjects
+Experiment Description	Introduction: Parkinson's disease (PD) is characterized by bradykinesia, tremor, and rigidity; in addition, postural instability sets in as the disease progresses. Non-motor symptoms of the disease include cognitive, behavioral, and neuropsychiatric changes, sensory and sleep disturbances that may precede the motor symptoms of the disease itself. The peculiar pathological features of PD are decreased dopaminergic neurons and dopamine levels in the substantia nigra pars compacta and pontine locus ceruleus. The study of the transcriptome plays a major role in the identification of genes and gene regulatory mechanisms in multifactorial neurodegenerative diseases such as Parkinson's disease itself. Therefore, we proposed to study the transcriptome directly in the midbrain containing the "Substantia nigra.The study was performed in 8 subjects with PD and 6 normal control subjects, using next-generation sequencing (NGS) technologies. Results: With the use of an ad hoc bioinformatics pipeline, gene expression profiles in the different PD subjects were obtained and compared to those of controls. In detail, the results obtained from the data analysis indicated 92 differentially expressed genes (FDR-adjusted p value ≤0.05 and fold-change less than -1.5 or greater than +1.5) of which 33 genes were up-regulated while 59 were down-regulated. Conclusions: Functional analysis of the differentially expressed genes revealed several genes involved in different canonical pathways indicating their likely significant role in Parkinson's disease.
+Experimental Design	case control design
+Experimental Design Term Source REF	EFO
+Experimental Design Term Accession Number	EFO:0001427
+Experimental Factor Name	disease
+Experimental Factor Type	disease
+Experimental Factor Term Source REF	EFO
+Experimental Factor Term Accession Number	EFO_0000408
+Person Last Name	Ventola
+Person First Name	Genomix4Life Giovanna
+Person Mid Initials
+Person Email	info@genomix4life.com
+Person Phone
+Person Fax
+Person Address	Via S. Allende
+Person Affiliation	Genomix4Life s.r.l.
+Person Roles	submitter
+Public Release Date	2024-01-03
+Protocol Name	P-MTAB-136237	P-MTAB-136238	P-MTAB-136239	P-MTAB-136240	P-MTAB-136241
+Protocol Type	sample collection protocol	nucleic acid extraction protocol	nucleic acid library construction protocol	nucleic acid sequencing protocol	normalization data transformation protocol
+Protocol Term Source REF	EFO	EFO	EFO	EFO	EFO
+Protocol Term Accession Number	EFO_0005518	EFO_0002944	EFO_0004184	EFO_0004170	EFO_0003816
+Protocol Description	Human midbrain samples were provided by the Parkinson's UK Brain Bank (Imperial College London, London, England). 	RNA was extracted starting from 5 µm FFPE slide-mounted sections using RecoverAll Total Nucleic Acid Isolation Protocol (ThermoFischer Scientific), according to the manufacturer’s instructions.	 The RNA was stored at -80° C until further processing. RNA sequencing and data analysis were performed by Genomix4Life Srl (Baronissi, Italy). The yield and quality of RNA were evaluated by  Qubit fluorometer (Thermo Fisher Scientific), and TapeStation 4200 (Agilent Technologies 5301 Stevens Creek Blvd Santa Clara, CA USA), respectively. Indexed libraries were prepared from 50ng/ea purified RNA with Illumina Stranded Total RNA with Ribo-Zero Plus (Illumina) Kit according to the manufacturer’s instructions. For library quantifications, TapeStation 4200 (Agilent Technologies) and Qubit (Thermo Fischer) was used. Indexed libraries were pooled in equimolar amounts with a final concentration of 2 nM.	The samples sequencing was carried out through Illumina Novaseq6000 System in a 2×76bp paired-end format. 	The read-count for the genes of interest was normalized considering all genes expressed in the samples, using DESeq2, with standard parameter. using the median of ratio, to perform the differential expression analysis.  In particular the counts were divided by sample-specific size factors determined by median ratio of gene counts relative to geometric mean per gene.
+Protocol Hardware				Illumina NovaSeq 6000
+Protocol Software
+Term Source Name	EFO
+Term Source File	http://www.ebi.ac.uk/efo/
+Term Source Version
+Comment[AEExperimentType]	RNA-seq of coding RNA
+Comment[TemplateType]	Cell line - High-throughput sequencing
+Comment[SecondaryAccession]	ERP150968
+Comment[SequenceDataURI]	http://www.ebi.ac.uk/ena/data/view/ERR12020761-ERR12020761	http://www.ebi.ac.uk/ena/data/view/ERR12020761-ERR12020762	http://www.ebi.ac.uk/ena/data/view/ERR12020762-ERR12020763	http://www.ebi.ac.uk/ena/data/view/ERR12020763-ERR12020764	http://www.ebi.ac.uk/ena/data/view/ERR12020764-ERR12020765	http://www.ebi.ac.uk/ena/data/view/ERR12020765-ERR12020766	http://www.ebi.ac.uk/ena/data/view/ERR12020766-ERR12020767	http://www.ebi.ac.uk/ena/data/view/ERR12020767-ERR12020768	http://www.ebi.ac.uk/ena/data/view/ERR12020768-ERR12020769	http://www.ebi.ac.uk/ena/data/view/ERR12020769-ERR12020770	http://www.ebi.ac.uk/ena/data/view/ERR12020770-ERR12020771	http://www.ebi.ac.uk/ena/data/view/ERR12020771-ERR12020772	http://www.ebi.ac.uk/ena/data/view/ERR12020772-ERR12020773	http://www.ebi.ac.uk/ena/data/view/ERR12020773-ERR12020774	http://www.ebi.ac.uk/ena/data/view/ERR12020774-ERR12020774
+SDRF File	E-MTAB-13295.sdrf.txt
