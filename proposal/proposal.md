@@ -80,6 +80,21 @@ sprintf("There are %i rows, corresponding to the samples", dim(samp.info.ibd)[1]
 
 ## 3. Ethics review
 
+The data set is relatively small, including only 6 controls and 8 PD
+samples. That could be a potential limitation for training the
+algorythm. However, since RNAseq datasets are large due to amount of
+genes, that should balance up for the limited computation power of my
+laptop and the computing time.
+
+This data set is publicly available, therefore I think that there are no
+ethical problems of using it. Additionally, if I achieve intresting
+results, it could be potentially of interest to the scientific
+community. The data set does not provide any personal information on the
+patients from whome it was collected, so there are no negative
+consequences for the people. If anything, there could be potential
+positive consequences as machine learning for the prediction of certain
+diseases based on the RNAseq is very promising area of research.
+
 ## 4. Data analysis plan
 
 Supervised machine learning would be performed, potentially on full data
