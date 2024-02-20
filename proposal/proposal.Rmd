@@ -54,6 +54,11 @@ samp.info.ibd <- read.table(file="E-MTAB-13295.sdrf.txt", sep="\t", header=T, fi
 sprintf("There are %i rows, corresponding to the samples", dim(samp.info.ibd)[1])
 ```
 
+```{r}
+glimpse(normalized.counts.ibd)
+```
+
+
 ## 3. Ethics review
 
 The data set is relatively small, including only 6 controls and 8 PD samples. That could be a potential limitation for training the algorythm. However, since RNAseq datasets are large due to amount of genes, that should balance up for the limited computation power of my laptop and the computing time. 
