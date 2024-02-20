@@ -11,7 +11,7 @@ library(broom)
 
 ## 1. Introduction
 
-I would like to use the RNAseq dataset for machine learning, to see if it can predict Pakinson's disease (PD) based on the transcriptome profile (in this data set, from the substantia nigra). 
+I would like to use the RNAseq dataset for machine learning, to see if it can predict Pakinson's disease (PD) based on the transcriptome profile (in this data set, from the substantia nigra). The transcriptome profile of a given organism is the set of RNA molecules expressed under certain conditions. It varies based on the biological process, stage of development, and environment. Based on the central dogma of molecular biology, the amount of RNA can also be used as a proxy of the set of proteins expressed in the sample (more RNA = more protein), but it is not always the case either. 
 
 The human samples used to create the dataset were provided by the Parkinson's UK Brain Bank (Imperial College London, London, UK).  A total of 8 PD (6 males and 2 females; mean age 81.125 and SD of 5.693) and 6 CTRL (1 male and 5 females; mean age 78.166 and SD of 10.381) samples. All PD cases included in the study are classified at Braak LB Stage 6. The study adhered to the principles of the Declaration of Helsinki of 1964 and its subsequent amendments. The Ethics Committee of the Oasi Research Institute—IRCCS of Troina (Italy) granted approval for the protocol on 5 April 2022 (approval code: 2022/04/05/CE-IRCCS-OASI/52). 
 

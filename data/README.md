@@ -18,9 +18,9 @@ Accosiated article: Salemi M, Ravo M, Lanza G, Schillaci FA, Ventola GM, Marches
 
 - `GeneID`: The identifier that is assigned to the gene, and is species-specific. There are 16148 raws of them in this dataset.
 
-- `CTRL_1` , `CTRL_2`, `CTRL_3`, `CTRL_4`, `CTRL_5`, `CTRL_6`: Control patients (no Parkinson). There are 6 (columns) of them, each data point represents the amount of protein level transcribed in the sample from to the corresponding gene (raws).
+- `CTRL_1` , `CTRL_2`, `CTRL_3`, `CTRL_4`, `CTRL_5`, `CTRL_6`: Control patients (no Parkinson). There are 6 (columns) of them, each data point represents the amount of RNA level expressed in the sample from to the corresponding gene (raws).
 
-- `PD_1`, `PD_2`, `PD_3`, `PD_4`, `PD_5`, `PD_6`, `PD_7`, `PD_8`: Parkinson's patients. There are 8 (columns) of them, each data point represents the amount of protein level transcribed in the sample from to the corresponding gene (raws).
+- `PD_1`, `PD_2`, `PD_3`, `PD_4`, `PD_5`, `PD_6`, `PD_7`, `PD_8`: Parkinson's patients. There are 8 (columns) of them, each data point represents the amount of RNA level expressed in the sample from to the corresponding gene (raws).
 
 ## samp.info.ibd (Original file: E-MTAB-13295.sdrf.txt)
 
