@@ -5,7 +5,7 @@ date: "February-March 2024"
 output: github_document
 ---
 
-## Data preparation
+# Data preparation
 
 ```{r tidy-data}
 library(janitor)
@@ -26,7 +26,6 @@ data <- t(normalized.counts.ibd)
 data <- data %>%
   row_to_names(row_number = 1) %>%
   as.data.frame() # %>%
- # mutate(status = c(rep("Control", 6), rep("Parkinsons", 8)))
 
 ```
 
@@ -40,13 +39,14 @@ library(rsample)
 # Enables analysis to be reproducible when random numbers are used 
 set.seed(123)
 # Put 80% of the data into the training set 
-data_split <- initial_split(data, prop = 0.70) #strata = status)
+data_split <- initial_split(data, prop = 0.70)
 # Create data frames for the two sets:
 train_data <- training(data_split)
 test_data  <- testing(data_split)
 ```
 
-## Dimensionality reduction
+# Logistic regression after PCA
+### Dimensionality reduction (PCA)
 
 ```{r PCA-for-train-data}
 #convert character dataframe to numeric
@@ -61,9 +61,93 @@ train_data_transposed_no <- train_data[, !train_data_transposed_cons]
 # Run PCA
 pca_train_result <- prcomp(train_data_transposed_no, scale. = TRUE)
 
+```
+
+```{r visualize-pca}
 # Plot PCA results
 plot(pca_train_result$x[,1], pca_train_result$x[,2], 
      xlab = "PC1", ylab = "PC2", 
      main = "PCA of Normalized Counts for the training data")
+
+# 3D scatterplot
+
+#install.packages("scatterplot3d") #install as needed
+library(scatterplot3d)
+
+scatterplot3d(pca_train_result$x[,1], pca_train_result$x[,2], pca_train_result$x[,3], 
+              xlab = "PC1", ylab = "PC2", zlab = "PC3", 
+              main = "3D PCA Plot")
+
+#Screeplot
+screeplot(pca_train_result, type = "lines")
+
+#heatmap
+train_matrix <- as.matrix(train_data[, -1])   
+train_matrix <- matrix(as.numeric(unlist(train_matrix)),nrow=nrow(train_matrix))
+
+#heatmap(train_matrix, scale = "row", add.expr = TRUE) #PositCloud does not have enought computing power for this one
+```
+
+
+### Logistic regression
+
+```{r prepare-data-logistic-reg}
+# Select first few principal components (based on screeplot)
+num_components <- 6
+selected_pcs <- pca_train_result$x[, 1:num_components]
+
+#Add binary variable (parkinson's vs control). Condition is written for the seed(123)
+condition <- c(rep("Control", 1), rep("Parkinsons", 2), rep("Control", 4), rep("Parkinsons", 2))
+
+# Assuming 'condition' is the binary outcome variable
+data_train_selected_pcs <- cbind(selected_pcs, condition)
+
+```
+
+```{r fit-the-model}
+library(broom)
+library(parsnip)
+
+data_train_selected_pcs <- as.data.frame(data_train_selected_pcs)
+
+#Fitting the logistic regression model
+model_fit <- logistic_reg() %>%
+  set_engine("glm") %>%
+  fit(as.factor(condition) ~ ., data = data_train_selected_pcs, family = "binomial")
+
+tidy(model_fit)
+
+#Assessing the goodness of fit of the logistic regression model
+summary(model_fit)
+
+# Get coefficient estimates and their significance
+#coef(summary(model_fit))
+```
+
+
+# Logistic regression without PCA
+
+```{r build-model}
+#install.packages("glmnet", "parsnip") #install as needed
+
+library(glmnet)
+library(parsnip)
+
+lr_mod <- 
+  logistic_reg(penalty = tune(), mixture = 1) %>% 
+  set_engine("glmnet")
+```
+
+
+```{r create-recipe}
+
+```
+
+```{r create-workflow}
+
+```
+
+```{r grid-for-tuning}
+
 ```
 
