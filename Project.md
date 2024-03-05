@@ -140,28 +140,36 @@ library(parsnip)
 
 data_train_selected_pcs <- as.data.frame(data_train_selected_pcs)
 
+data_train_selected_pcs <- transform(data_train_selected_pcs, 
+            PC1 = as.numeric(PC1), 
+            PC2 = as.numeric(PC2),
+            PC3 = as.numeric(PC3), 
+            PC4 = as.numeric(PC4),
+            PC5 = as.numeric(PC5), 
+            PC6 = as.numeric(PC6))
+
 #Fitting the logistic regression model
 model_fit <- logistic_reg() %>%
   set_engine("glm") %>%
   fit(as.factor(condition) ~ ., data = data_train_selected_pcs, family = "binomial")
+```
 
+    ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+``` r
 tidy(model_fit)
 ```
 
-    ## # A tibble: 49 × 5
-    ##    term                  estimate std.error statistic p.value
-    ##    <chr>                    <dbl>     <dbl>     <dbl>   <dbl>
-    ##  1 (Intercept)          -2.46e+ 1   131011. -1.88e- 4    1.00
-    ##  2 PC1-100.669753612644  4.91e+ 1   185277.  2.65e- 4    1.00
-    ##  3 PC1-2.37775419621684 -2.69e-14   185277. -1.45e-19    1   
-    ##  4 PC1-39.1392375268399 -4.99e-14   185277. -2.69e-19    1   
-    ##  5 PC1-9.62955839720086 -5.83e-15   185277. -3.15e-20    1   
-    ##  6 PC119.0287120199584   4.91e+ 1   185277.  2.65e- 4    1.00
-    ##  7 PC12.73379426679209  -1.44e-14   185277. -7.75e-20    1   
-    ##  8 PC132.5721926050154   4.91e+ 1   185277.  2.65e- 4    1.00
-    ##  9 PC198.4609141258824   4.91e+ 1   185277.  2.65e- 4    1.00
-    ## 10 PC2-27.1763035517658 NA              NA  NA          NA   
-    ## # ℹ 39 more rows
+    ## # A tibble: 7 × 5
+    ##   term        estimate std.error  statistic p.value
+    ##   <chr>          <dbl>     <dbl>      <dbl>   <dbl>
+    ## 1 (Intercept)   7.95     134876.  0.0000589    1.00
+    ## 2 PC1           0.284      1958.  0.000145     1.00
+    ## 3 PC2          -0.559      3388. -0.000165     1.00
+    ## 4 PC3          -0.198      2438. -0.0000811    1.00
+    ## 5 PC4           0.529      2655.  0.000199     1.00
+    ## 6 PC5           0.839      5008.  0.000168     1.00
+    ## 7 PC6          -0.0873     1488. -0.0000587    1.00
 
 ``` r
 #Assessing the goodness of fit of the logistic regression model
@@ -175,11 +183,6 @@ summary(model_fit)
     ## preproc       1     -none-       list     
     ## elapsed       1     -none-       list     
     ## censor_probs  0     -none-       list
-
-``` r
-# Get coefficient estimates and their significance
-#coef(summary(model_fit))
-```
 
 # Logistic regression without PCA
 

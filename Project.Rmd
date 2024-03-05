@@ -110,6 +110,14 @@ library(parsnip)
 
 data_train_selected_pcs <- as.data.frame(data_train_selected_pcs)
 
+data_train_selected_pcs <- transform(data_train_selected_pcs, 
+            PC1 = as.numeric(PC1), 
+            PC2 = as.numeric(PC2),
+            PC3 = as.numeric(PC3), 
+            PC4 = as.numeric(PC4),
+            PC5 = as.numeric(PC5), 
+            PC6 = as.numeric(PC6))
+
 #Fitting the logistic regression model
 model_fit <- logistic_reg() %>%
   set_engine("glm") %>%
@@ -120,8 +128,10 @@ tidy(model_fit)
 #Assessing the goodness of fit of the logistic regression model
 summary(model_fit)
 
-# Get coefficient estimates and their significance
-#coef(summary(model_fit))
+```
+
+```{r}
+
 ```
 
 
