@@ -1,16 +1,38 @@
----
-title: "Machine learning using RNAseq data"
-author: "Alsu"
-date: "February-March 2024"
-output: github_document
----
+Machine learning using RNAseq data
+================
+Alsu
+February-March 2024
 
 ## Data preparation
 
-```{r tidy-data}
+``` r
 library(janitor)
-library(tidyverse)
+```
 
+    ## 
+    ## Attaching package: 'janitor'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     chisq.test, fisher.test
+
+``` r
+library(tidyverse)
+```
+
+    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
+    ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
+    ## ✔ ggplot2   3.5.0     ✔ tibble    3.2.1
+    ## ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+    ## ✔ purrr     1.0.2
+
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
+    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+``` r
 setwd("/cloud/project/data/")  
 
 normalized.counts.ibd <- read.table(file="Normalized_Count.csv",
@@ -27,11 +49,9 @@ data <- data %>%
   row_to_names(row_number = 1) %>%
   as.data.frame() # %>%
  # mutate(status = c(rep("Control", 6), rep("Parkinsons", 8)))
-
 ```
 
-
-```{r splitting-data}
+``` r
 #install.packages('rsample')
 
 library(rsample)
@@ -48,7 +68,7 @@ test_data  <- testing(data_split)
 
 ## Dimensionality reduction
 
-```{r PCA-for-train-data}
+``` r
 #convert character dataframe to numeric
 train_data <- as.data.frame(sapply( train_data , as.numeric))
 
@@ -67,3 +87,4 @@ plot(pca_train_result$x[,1], pca_train_result$x[,2],
      main = "PCA of Normalized Counts for the training data")
 ```
 
+![](Project_files/figure-gfm/PCA-for-train-data-1.png)<!-- -->
