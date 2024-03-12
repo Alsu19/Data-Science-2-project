@@ -45,7 +45,7 @@ train_data <- training(data_split)
 test_data  <- testing(data_split)
 ```
 
-# Logistic regression after PCA
+# Logistic regression after PCA and decision tree
 ### Dimensionality reduction (PCA)
 
 ```{r PCA-for-train-data}
@@ -93,7 +93,7 @@ train_matrix <- matrix(as.numeric(unlist(train_matrix)),nrow=nrow(train_matrix))
 
 ```{r prepare-data-logistic-reg}
 # Select first few principal components (based on screeplot)
-num_components <- 6
+num_components <- 5
 selected_pcs <- pca_train_result$x[, 1:num_components]
 
 #Add binary variable (parkinson's vs control). Condition is written for the seed(123)
@@ -115,8 +115,8 @@ data_train_selected_pcs <- transform(data_train_selected_pcs,
             PC2 = as.numeric(PC2),
             PC3 = as.numeric(PC3), 
             PC4 = as.numeric(PC4),
-            PC5 = as.numeric(PC5), 
-            PC6 = as.numeric(PC6))
+            PC5 = as.numeric(PC5)
+          )
 
 #Fitting the logistic regression model
 model_fit <- logistic_reg() %>%
@@ -130,34 +130,193 @@ summary(model_fit)
 
 ```
 
-```{r}
+```{r extract-variables}
+
+# Making gene list
+gene_names <- as.matrix.data.frame(train_data_transposed_no[0,], col_names = FALSE)
+
+# Assuming 'pca_train_result' contains the PCA result object obtained from prcomp
+# Assuming 'gene_names' contains the names of the genes in the same order as the columns in my count data matrix
+
+# Get loadings of original variables on principal components
+loadings <- pca_train_result$rotation
+
+# Define function to get top contributing genes for each principal component
+get_top_genes <- function(component_index, num_genes = 10) {
+  # Sort genes by absolute loading value for the specified principal component
+  sorted_genes <- order(abs(loadings[, component_index]), decreasing = TRUE)
+  # Get top contributing gene names
+  top_genes <- gene_names[sorted_genes[1:num_genes]]
+  # Get corresponding loadings
+  top_loadings <- loadings[sorted_genes[1:num_genes], component_index]
+  # Create data frame with gene names and loadings
+  top_genes_df <- data.frame(Gene = top_genes, Loading = top_loadings)
+  return(top_genes_df)
+}
+
+# Example: Get top contributing genes for the first principal component
+top_genes_pc1 <- get_top_genes(1, num_genes = 10)
+print(top_genes_pc1)
 
 ```
 
+### Decision tree
 
-# Logistic regression without PCA
-
-```{r build-model}
-#install.packages("glmnet", "parsnip") #install as needed
-
+```{r build-model-for-dec-tree}
+library(tidymodels)
+library(themis)
 library(glmnet)
 library(parsnip)
+library(recipes)
 
-lr_mod <- 
-  logistic_reg(penalty = tune(), mixture = 1) %>% 
-  set_engine("glmnet")
+# Create recipe
+park_recipe <- recipe(condition ~ ., data = data_train_selected_pcs) %>%
+                step_normalize(all_numeric_predictors())
+
+## Build a logistic regression model
+
+glm_park <- logistic_reg() %>%
+  set_engine("glm")
+
+## Start a workflow (recipe only)
+park_wf <- workflow() %>%
+    add_recipe(park_recipe)
+
+## Add the model and fit the workflow
+park_glm <- park_wf %>%
+    add_model(glm_park) %>%
+    fit(data = data_train_selected_pcs)
+
+# Print the fitted model
+park_glm
 ```
 
 
-```{r create-recipe}
+```{r train decision-tree}
+library(tidymodels)
+library(themis)
 
+park_pca_recipe <- recipe(condition ~ ., data = data_train_selected_pcs) %>%
+                step_normalize(all_numeric_predictors()) 
+
+## Build a decision tree model
+tree_pca_park <- decision_tree() %>%         
+    set_engine("rpart") %>%      
+    set_mode("classification") 
+
+## Start a workflow (recipe only)
+park_wf <- workflow() %>%
+    add_recipe(park_pca_recipe)
+
+## Add the model and fit the workflow
+park_tree <- park_wf %>%
+    add_model(tree_pca_park) %>%
+    fit(data = data_train_selected_pcs)
+
+# Print the fitted model
+park_tree
 ```
 
-```{r create-workflow}
 
+```{r confusion-matrix}
+data_train_selected_pcs$condition <- as.factor(data_train_selected_pcs$condition)
+
+results <- data_train_selected_pcs %>%
+    bind_cols(predict(park_glm, data_train_selected_pcs) %>%
+                  rename(.pred_glm = .pred_class))
+
+# Confusion matrix for logistic regression model
+results %>%
+    conf_mat(truth = condition, estimate = .pred_glm)
+
+results <- data_train_selected_pcs %>%
+    bind_cols(predict(park_glm, data_train_selected_pcs) %>%
+                  rename(.pred_tree = .pred_class))
+
+# Confusion matrix for decision tree model
+results %>%
+    conf_mat(truth = condition, estimate = .pred_tree)
 ```
 
-```{r grid-for-tuning}
+```{r accuracy}
+#convert character dataframe to numeric
+test_data <- as.data.frame(sapply(test_data , as.numeric))
 
+# Identify constant or zero columns
+test_data_transposed_cons <- sapply(test_data, function(x) is.atomic(x) && length(unique(x)) == 1)
+
+# Remove constant or zero columns
+test_data_transposed_no <- test_data[, !test_data_transposed_cons]
+
+# Run PCA
+pca_test_result <- prcomp(test_data_transposed_no, scale. = TRUE)
+
+#Select first 6 PCAs
+num_components <- 5
+test_data_selected_pcs <- as.data.frame(pca_test_result$x[, 1:num_components])
+
+condition_test <- c(rep("Control", 1), rep("Parkinsons", 4))
+
+# Assuming 'condition' is the binary outcome variable
+test_data_selected_pcs <- cbind(test_data_selected_pcs, condition_test)
+test_data_selected_pcs$condition <- as.factor(test_data_selected_pcs$condition)
+
+# Accuracy
+library(tidymodels)
+
+results_test <- test_data_selected_pcs %>%
+    bind_cols(predict(park_glm, test_data_selected_pcs) %>%
+                  rename(.pred_glm = .pred_class)) %>%
+    bind_cols(predict(park_glm, test_data_selected_pcs) %>%
+                  rename(.pred_tree = .pred_class))
+
+# Calculate accuracy
+accuracy(results_test, truth = condition, estimate = .pred_glm)
+accuracy(results_test, truth = condition, estimate = .pred_tree)
+
+# Calculate positive predict value
+ppv(results_test, truth = condition, estimate = .pred_glm)
+ppv(results_test, truth = condition, estimate = .pred_tree)
 ```
 
+
+# LASSO
+
+```{r create-condition-for-train-data}
+
+train_data <- cbind(condition, train_data) #make sure only runs once
+```
+
+
+```{r logistic-reg}
+library(tidymodels)
+library(themis)
+library(glmnet)
+library(parsnip)
+library(recipes)
+
+mini_train <- train_data[, c(1:100)]
+
+# Create recipe
+park_recipe2 <- recipe(condition ~ ., data = mini_train) %>%
+                step_normalize(all_predictors())
+
+## Build a logistic regression model
+
+glm_park2 <- logistic_reg(penalty = 0.5, mixture = 1) %>%
+    set_engine("glm")
+
+## Start a workflow (recipe only)
+park_wf2 <- workflow() %>%
+    add_recipe(park_recipe2)
+
+## Add the model and fit the workflow
+park_glm2 <- park_wf2 %>%
+    add_model(glm_park2) %>%
+    fit(data = mini_train)
+
+# Print the fitted model
+park_glm2
+
+# Oh no :( My dataset doesn't have enought degrees of freedom.
+```
