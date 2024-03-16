@@ -4,28 +4,42 @@ author: Alsu Shagieva
 output: github_document
 ---
 
-## Summary
+## Research question and introduction
 
-Write-up of your project and findings go here. 
-Think of this as the text of your presentation. 
-The length should be roughly 5 minutes when read out loud.
-Although pacing varies, a 5-minute speech is roughly 750 words. 
-To use the word count addin, select the text you want to count the words of (probably this is the 
-Summary section of this document, go to Addins, and select the `Word count` addin).
-This addin counts words using two different algorithms, but the results should be similar and as long as you're in the ballpark of 750 words, you're good! 
-The addin will ignore code chunks and only count the words in prose.
+Guiding question: Can Parkinson’s Disease (PD) be predicted based on the transcriptome profile?
 
-You can also load your data here and present any analysis results / plots, but I strongly urge you to keep that to a minimum (maybe only the most important graphic, if you have one you can choose). 
-And make sure to hide your code with  `echo = FALSE` unless the point you are trying to make is about the code itself.
-Your results with proper output and graphics go in your presentation, this space is for a brief summary of your project.
+The transcriptome profile of a given organism is the set of RNA molecules expressed under certain conditions. It varies based on the biological process, stage of development, and environment. Based on the central dogma of molecular biology, the amount of RNA can also be used as a proxy of the set of proteins expressed in the sample (more RNA = more protein), but these are often not equivalent due to some biological processes. 
 
-```{r load-data, echo = FALSE}
-# load data here, if you like
-```
+The human samples used to create the dataset were provided by the Parkinson's UK Brain Bank (Imperial College London, London, UK).  A total of 8 PD (6 males and 2 females; mean age 81.125 and SD of 5.693) and 6 control samples. The data (normalized counts) is publicly available at ArrayExpress.
+
+## Initial considerations
+
+According to Salemi et al., DESeq2 package in R was used for the normalization of the initial raw data, meaning that I could skip directly to the dimensionality reduction step of the analysis. Due to large number of explanatory variables (genes), some sort of dimensionality reduction is needed prior to implementation of any models to the dataset.
+
+## Principle component Analysis (PCA)
+
+After splitting the data to the test/train data sets, PCA was performed. Based on the screeplot, the first 5 PCAs were used for the further modeling. Additionally, the extraction of original components was performed to see what get top contributing genes for each principal components. The names of the genes and the corresponding loading values were extracted.
+
+## Logistic regression and decision tree modeling
+
+To test for both linear and non-linear relationships, two models were chosen: logistic regression and decision tree. For the logistic regression, the baseline count in -2.74. The PCA (1 to 5), are expected to change, on average:
+PC1: 0.3486820
+PC2: -0.8330033
+PC3: -0.3083796
+PC4: 0.3583610
+PC5: 0.4477482
+
+The accuracy of prediction for both linear regression model and decision tree was 0.6. Positive predictive value was 0.33 for both models as well. Those low numbers are to be expected since the number of observations in original dataset was only 15, and the train/test split therefore also had small number of observations. The biological significance, as well as the function of top contributing genes was not explored in this project.
+
+## Future considerations
+
+For this number of explanatory variables, lasso method was explored prior to performing PCA. However, due to limited number of observations, the small degree of freedom limited the capacity of lasso. It would intresting to be able to implement the method (lasso penalty) designed for large number of observations while the number of observations is still less than number of variables. 
+
+For the non-linear relationship modeling, random forest potentially could be a more suitable approach, again, due to number of explanatory variables. While decision tree is good, with that amount of variables, random forest would be more robust towards outliers and less prone to overfitting.
 
 ## Presentation
 
-Our presentation can be found [here](presentation/presentation.html).
+My presentation can be found [here](https://docs.google.com/presentation/d/1XOPeHA2Bdrts6f07OUv04bX1w2UliyUUmhIf5ikh5Lc/edit?usp=sharing).
 
 ## Data 
 
@@ -37,7 +51,9 @@ Role: submitter
 Affiliation: Genomix4Life s.r.l.
 "Gene expression profiling of substantia nigra: a post-mortem study in Parkinson's disease and control subjects." BioStudies, E-MTAB-13295, 2024, https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-13295. Accessed 13 February 2024.
 
+
 ## References
 
-List any references here. You should, at a minimum, list your data source.
+Salemi M, Ravo M, Lanza G, Schillaci FA, Ventola GM, Marchese G, Salluzzo MG, Cappelletti G, Ferri R. Gene Expression Profiling of Post Mortem Midbrain of Parkinson’s Disease Patients and Healthy Controls. International Journal of Molecular Sciences. 2024; 25(2):707. https://doi.org/10.3390/ijms25020707
+
 
